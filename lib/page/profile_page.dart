@@ -4,11 +4,7 @@ import 'list_pertemuan_page.dart';
 class ProfilePage extends StatefulWidget {
   final String nama, experience;
 
-  const ProfilePage({
-    super.key,
-    required this.nama,
-    required this.experience,
-  });
+  const ProfilePage({super.key, required this.nama, required this.experience});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -33,17 +29,29 @@ Dan membuat program yang dapat bermanfaat untuk banyak orang.
 
   // ================= EDIT PROFILE =================
   void editProfile() {
-    TextEditingController aboutController =
-        TextEditingController(text: aboutMe);
+    TextEditingController aboutController = TextEditingController(
+      text: aboutMe,
+    );
 
-    TextEditingController emailController =
-        TextEditingController(text: info["Email"]);
-    TextEditingController phoneController =
-        TextEditingController(text: info["Phone"]);
-    TextEditingController lahirController =
-        TextEditingController(text: info["Tanggal Lahir"]);
-    TextEditingController kerjaController =
-        TextEditingController(text: info["Pekerjaan"]);
+    TextEditingController emailController = TextEditingController(
+      text: info["Email"],
+    );
+    TextEditingController phoneController = TextEditingController(
+      text: info["Phone"],
+    );
+    TextEditingController lahirController = TextEditingController(
+      text: info["Tanggal Lahir"],
+    );
+    TextEditingController kerjaController = TextEditingController(
+      text: info["Pekerjaan"],
+    );
+
+    TextEditingController skillController = TextEditingController(
+      text: skills.join(", "),
+    );
+    TextEditingController interestController = TextEditingController(
+      text: interests.join(", "),
+    );
 
     showDialog(
       context: context,
@@ -72,17 +80,36 @@ Dan membuat program yang dapat bermanfaat untuk banyak orang.
                 ),
                 TextField(
                   controller: lahirController,
-                  decoration:
-                      const InputDecoration(labelText: "Tanggal Lahir"),
+                  decoration: const InputDecoration(labelText: "Tanggal Lahir"),
                 ),
                 TextField(
                   controller: kerjaController,
-                  decoration:
-                      const InputDecoration(labelText: "Pekerjaan"),
+                  decoration: const InputDecoration(labelText: "Pekerjaan"),
+                ),
+
+                const SizedBox(height: 10),
+
+                // 🔥 EDIT SKILLS
+                TextField(
+                  controller: skillController,
+                  decoration: const InputDecoration(
+                    labelText: "Skills (pisahkan dengan koma)",
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                // 🔥 EDIT INTERESTS
+                TextField(
+                  controller: interestController,
+                  decoration: const InputDecoration(
+                    labelText: "Interests (pisahkan dengan koma)",
+                  ),
                 ),
               ],
             ),
           ),
+
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -97,7 +124,8 @@ Dan membuat program yang dapat bermanfaat untuk banyak orang.
                     return AlertDialog(
                       title: const Text("Konfirmasi"),
                       content: const Text(
-                          "Apakah anda yakin ingin mengedit profile ini?"),
+                        "Apakah anda yakin ingin mengedit profile ini?",
+                      ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
@@ -109,10 +137,22 @@ Dan membuat program yang dapat bermanfaat untuk banyak orang.
                               aboutMe = aboutController.text;
                               info["Email"] = emailController.text;
                               info["Phone"] = phoneController.text;
-                              info["Tanggal Lahir"] =
-                                  lahirController.text;
-                              info["Pekerjaan"] =
-                                  kerjaController.text;
+                              info["Tanggal Lahir"] = lahirController.text;
+                              info["Pekerjaan"] = kerjaController.text;
+
+                              // 🔥 UPDATE SKILLS
+                              skills = skillController.text
+                                  .split(",")
+                                  .map((e) => e.trim())
+                                  .where((e) => e.isNotEmpty)
+                                  .toList();
+
+                              // 🔥 UPDATE INTERESTS
+                              interests = interestController.text
+                                  .split(",")
+                                  .map((e) => e.trim())
+                                  .where((e) => e.isNotEmpty)
+                                  .toList();
                             });
 
                             Navigator.pop(context);
@@ -120,8 +160,8 @@ Dan membuat program yang dapat bermanfaat untuk banyak orang.
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  content: Text(
-                                      "Profile berhasil di update")),
+                                content: Text("Profile berhasil di update"),
+                              ),
                             );
                           },
                           child: const Text("Ya"),
@@ -140,9 +180,9 @@ Dan membuat program yang dapat bermanfaat untuk banyak orang.
   }
 
   void shareProfile() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Profile dibagikan")),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Profile dibagikan")));
   }
 
   void deleteProfile() {
@@ -198,8 +238,7 @@ Dan membuat program yang dapat bermanfaat untuk banyak orang.
                       backgroundColor: Colors.white,
                       child: const CircleAvatar(
                         radius: 50,
-                        backgroundImage:
-                            AssetImage("assets/merapi.jpeg"),
+                        backgroundImage: AssetImage("assets/merapi.jpeg"),
                       ),
                     ),
                   ),
@@ -209,28 +248,27 @@ Dan membuat program yang dapat bermanfaat untuk banyak orang.
 
             const SizedBox(height: 60),
 
-            Text(widget.nama,
-                style: const TextStyle(
-                    fontSize: 22, fontWeight: FontWeight.bold)),
+            Text(
+              widget.nama,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
 
-            const Text("Tangerang, Indonesia",
-                style: TextStyle(color: Colors.grey)),
+            const Text(
+              "Tangerang, Indonesia",
+              style: TextStyle(color: Colors.grey),
+            ),
 
-            Text(widget.experience,
-                style: const TextStyle(color: Colors.grey)),
+            Text(widget.experience, style: const TextStyle(color: Colors.grey)),
 
             const SizedBox(height: 20),
 
             sectionCard(
-  title: "About Me",
-  child: Align(
-    alignment: Alignment.centerLeft,
-    child: Text(
-      aboutMe,
-      textAlign: TextAlign.left,
-    ),
-  ),
-),
+              title: "About Me",
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(aboutMe, textAlign: TextAlign.left),
+              ),
+            ),
 
             sectionCard(
               title: "Information",
@@ -246,34 +284,34 @@ Dan membuat program yang dapat bermanfaat untuk banyak orang.
             ),
 
             sectionCard(
-  title: "Skills",
-  child: Align(
-    alignment: Alignment.centerLeft,
-    child: Wrap(
-      alignment: WrapAlignment.start,
-      spacing: 8,
-      children: skills
-          .map((s) => Chip(label: Text(s)))
-          .toList(),
-    ),
-  ),
-),
+              title: "Skills",
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Wrap(
+                  alignment: WrapAlignment.start,
+                  spacing: 8,
+                  children: skills.map((s) => Chip(label: Text(s))).toList(),
+                ),
+              ),
+            ),
             sectionCard(
-  title: "Interests",
-  child: Align(
-    alignment: Alignment.centerLeft,
-    child: Wrap(
-      alignment: WrapAlignment.start,
-      spacing: 8,
-      children: interests
-          .map((i) => Chip(
-                label: Text(i),
-                backgroundColor: Colors.green[100],
-              ))
-          .toList(),
-    ),
-  ),
-),
+              title: "Interests",
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Wrap(
+                  alignment: WrapAlignment.start,
+                  spacing: 8,
+                  children: interests
+                      .map(
+                        (i) => Chip(
+                          label: Text(i),
+                          backgroundColor: Colors.green[100],
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ),
 
             const SizedBox(height: 20),
 
@@ -293,8 +331,7 @@ Dan membuat program yang dapat bermanfaat untuk banyak orang.
                 ElevatedButton.icon(
                   onPressed: deleteProfile,
                   icon: const Icon(Icons.delete),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                   label: const Text("Delete"),
                 ),
               ],
@@ -315,16 +352,16 @@ Dan membuat program yang dapat bermanfaat untuk banyak orang.
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
-          BoxShadow(
-              color: Colors.black.withOpacity(0.05), blurRadius: 10),
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: const TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 10),
           child,
         ],
